@@ -11,32 +11,35 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\TransactionController; // Import the TransactionController
 use App\Http\Controllers\RequestController; // Import the RequestController
 use App\Http\Controllers\ReportController; // Import the ReportController
+use App\Http\Controllers\StokHabisPakaiController;
 
-Route::get('/', [LoginController::class, 'index'])->name('login');
-Route::get('/login', [LoginController::class, 'index'])->name('login.get');
-Route::post('/login', [LoginController::class, 'store'])->name('login.post');
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get("/",[LoginController::class,"index"])->name("login");
+Route::get("/login",[LoginController::class,"index"])->name("login.get");
+Route::post("/login",[LoginController::class,"store"])->name("login.post");
+Route::middleware("auth")->group(function () {
+    Route::get("/dashboard",[DashboardController::class,"index"])->name("dashboard");
+    Route::post("/logout",[LoginController::class,"logout"])->name("logout");
 
     // Inventaris (PASTIKAN SEMUA INI ADA)
-    Route::get('/inventaris/print_all', [InventarisController::class, 'printAll'])->name('inventaris.print_all');
-    Route::get('/inventaris/print_single/{id}', [InventarisController::class, 'printSingle'])->name('inventaris.print_single');
-    Route::post('inventaris/import', [InventarisController::class, 'import'])->name('inventaris.import');
-    Route::get('inventaris/export', [InventarisController::class, 'export'])->name('inventaris.export');
-    Route::get('inventaris/grouped/{nama_barang}', [InventarisController::class, 'showGrouped'])->name('inventaris.show_grouped'); // Rute baru kita
-    Route::resource('inventaris', InventarisController::class);
+    Route::get("/inventaris/print_all",[InventarisController::class,"printAll"])->name("inventaris.print_all");
+    Route::get("/inventaris/print_single/{id}",[InventarisController::class,"printSingle"])->name("inventaris.print_single");
+    Route::post("inventaris/import",[InventarisController::class,"import"])->name("inventaris.import");
+    Route::get("inventaris/export",[InventarisController::class,"export"])->name("inventaris.export");
+    Route::get("inventaris/grouped/{nama_barang}",[InventarisController::class,"showGrouped"])->name("inventaris.show_grouped"); // Rute baru kita
+    Route::put("inventaris/{inventaris}", [InventarisController::class, "update"])->name("inventaris.update");
+    Route::resource("inventaris",InventarisController::class);
 
-    Route::resource('acquisitions', AcquisitionController::class);
-    Route::resource('rooms', RoomController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('units', UnitController::class);
-    Route::resource('transactions', TransactionController::class)->except(['edit', 'update']);
-    Route::resource('requests', RequestController::class);
+    Route::resource("acquisitions",AcquisitionController::class);
+    Route::resource("rooms",RoomController::class);
 
-
+    // Stok Habis Pakai
+    Route::resource("stok", StokHabisPakaiController::class);
+    Route::resource("users",UserController::class);
+    Route::resource("units",UnitController::class);
+    Route::resource("transactions",TransactionController::class)->except(["edit","update"]);
+    Route::resource("requests",RequestController::class);
 
     // Report Routes
-    Route::get('reports/transactions', [ReportController::class, 'transactionReport'])->name('reports.transactions');
-    Route::get('reports/item-history', [ReportController::class, 'itemHistoryReport'])->name('reports.item_history');
+    Route::get("reports/transactions",[ReportController::class,"transactionReport"])->name("reports.transactions");
+    Route::get("reports/item-history",[ReportController::class,"itemHistoryReport"])->name("reports.item_history");
 });

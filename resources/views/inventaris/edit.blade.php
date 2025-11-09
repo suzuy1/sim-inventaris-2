@@ -1,132 +1,178 @@
 @extends('dashboard')
 
 @section('content')
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold leading-tight text-gray-900 mb-8">Edit Inventaris: {{ $inventaris->nama_barang }}</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Inventaris</h1>
+                <p class="text-gray-600">Update data inventaris: {{ $inventaris->nama_barang }}</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ route('inventaris.index') }}" class="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 transition-colors duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Kembali
+                </a>
+            </div>
+        </div>
+    </div>
 
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <form action="{{ route('inventaris.update', $inventaris) }}" method="POST" x-data="{ kategori: '{{ old('kategori', $inventaris->kategori) }}' }">
-                @csrf
-                @method('PUT')
+    <!-- Form -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <form action="{{ route('inventaris.update', $inventaris) }}" method="POST" x-data="{ kategori: '{{ old('kategori', $inventaris->kategori) }}' }">
+            @csrf
+            @method('PUT')
 
-                <div class="mb-4">
-                    <label for="nama_barang" class="block text-gray-700 text-sm font-bold mb-2">Nama Barang:</label>
-                    <input type="text" name="nama_barang" id="nama_barang" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('nama_barang') border-red-500 @enderror" value="{{ old('nama_barang', $inventaris->nama_barang) }}" required>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Nama Barang -->
+                <div class="md:col-span-2">
+                    <label for="nama_barang" class="block text-sm font-medium text-gray-700 mb-2">Nama Barang *</label>
+                    <input 
+                        type="text" 
+                        name="nama_barang" 
+                        id="nama_barang" 
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200 @error('nama_barang') border-red-300 @enderror" 
+                        value="{{ old('nama_barang', $inventaris->nama_barang) }}" 
+                        required
+                    >
                     @error('nama_barang')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="kategori" class="block text-gray-700 text-sm font-bold mb-2">Kategori Inventaris:</label>
-                    <select name="kategori" id="kategori" x-model="kategori" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('kategori') border-red-500 @enderror" required>
-                        <option value="tidak_habis_pakai" {{ old('kategori', $inventaris->kategori) == 'tidak_habis_pakai' ? 'selected' : '' }}>Barang Tidak Habis Pakai</option>
-                        <option value="habis_pakai" {{ old('kategori', $inventaris->kategori) == 'habis_pakai' ? 'selected' : '' }}>Barang Habis Pakai</option>
-                        <option value="aset_tetap" {{ old('kategori', $inventaris->kategori) == 'aset_tetap' ? 'selected' : '' }}>Aset Tetap</option>
+                <!-- Kode Inventaris -->
+                <div>
+                    <label for="kode_inventaris" class="block text-sm font-medium text-gray-700 mb-2">Kode Inventaris *</label>
+                    <input 
+                        type="text" 
+                        name="kode_inventaris" 
+                        id="kode_inventaris" 
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200 @error('kode_inventaris') border-red-300 @enderror" 
+                        value="{{ old('kode_inventaris', $inventaris->kode_inventaris) }}" 
+                        required
+                    >
+                    @error('kode_inventaris')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Kategori -->
+                <div>
+                    <label for="kategori" class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <select 
+                        name="kategori" 
+                        id="kategori" 
+                        x-model="kategori"
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200"
+                    >
+                        <option value="">Pilih Kategori</option>
+                        <option value="Elektronik" {{ old('kategori', $inventaris->kategori) == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
+                        <option value="Furniture" {{ old('kategori', $inventaris->kategori) == 'Furniture' ? 'selected' : '' }}>Furniture</option>
+                        <option value="Alat Tulis" {{ old('kategori', $inventaris->kategori) == 'Alat Tulis' ? 'selected' : '' }}>Alat Tulis</option>
+                        <option value="Kendaraan" {{ old('kategori', $inventaris->kategori) == 'Kendaraan' ? 'selected' : '' }}>Kendaraan</option>
+                        <option value="Lainnya" {{ old('kategori', $inventaris->kategori) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                     </select>
-                    @error('kategori')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="pemilik" class="block text-gray-700 text-sm font-bold mb-2">Pemilik (ex: feb):</label>
-                    <input type="text" name="pemilik" id="pemilik" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('pemilik') border-red-500 @enderror" value="{{ old('pemilik', $inventaris->pemilik) }}" required>
-                    @error('pemilik')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
+                <!-- Unit -->
+                <div>
+                    <label for="unit_id" class="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+                    <select 
+                        name="unit_id" 
+                        id="unit_id" 
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200"
+                    >
+                        <option value="">Pilih Unit</option>
+                        @foreach($units as $unit)
+                            <option value="{{ $unit->id }}" {{ old('unit_id', $inventaris->unit_id) == $unit->id ? 'selected' : '' }}>
+                                {{ $unit->nama_unit }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="sumber_dana" class="block text-gray-700 text-sm font-bold mb-2">Sumber Dana (ex: pp-pts):</label>
-                    <input type="text" name="sumber_dana" id="sumber_dana" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('sumber_dana') border-red-500 @enderror" value="{{ old('sumber_dana', $inventaris->sumber_dana) }}" required>
-                    @error('sumber_dana')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
+                <!-- Ruangan -->
+                <div>
+                    <label for="room_id" class="block text-sm font-medium text-gray-700 mb-2">Ruangan</label>
+                    <select 
+                        name="room_id" 
+                        id="room_id" 
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200"
+                    >
+                        <option value="">Pilih Ruangan</option>
+                        @foreach($rooms as $room)
+                            <option value="{{ $room->id }}" {{ old('room_id', $inventaris->room_id) == $room->id ? 'selected' : '' }}>
+                                {{ $room->nama_ruangan }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="mb-4">
-                    <label for="tahun_beli" class="block text-gray-700 text-sm font-bold mb-2">Tahun Beli:</label>
-                    <input type="date" name="tahun_beli" id="tahun_beli" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('tahun_beli') border-red-500 @enderror" value="{{ old('tahun_beli', \Carbon\Carbon::parse($inventaris->tahun_beli)->format('Y-m-d')) }}" required>
-                    @error('tahun_beli')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="nomor_unit" class="block text-gray-700 text-sm font-bold mb-2">Nomor Unit (ex: 1):</label>
-                    <input type="number" name="nomor_unit" id="nomor_unit" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('nomor_unit') border-red-500 @enderror" value="{{ old('nomor_unit', $inventaris->nomor_unit) }}" required min="1">
-                    @error('nomor_unit')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Jumlah Kondisi Barang:</label>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label for="kondisi_baik" class="block text-sm font-medium text-gray-500">Baik</label>
-                            <input type="number" name="kondisi_baik" id="kondisi_baik" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" value="{{ old('kondisi_baik', $inventaris->kondisi_baik) }}" min="0">
-                        </div>
-                        <div>
-                            <label for="kondisi_rusak_ringan" class="block text-sm font-medium text-gray-500">Rusak Ringan</label>
-                            <input type="number" name="kondisi_rusak_ringan" id="kondisi_rusak_ringan" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" value="{{ old('kondisi_rusak_ringan', $inventaris->kondisi_rusak_ringan) }}" min="0">
-                        </div>
-                        <div>
-                            <label for="kondisi_rusak_berat" class="block text-sm font-medium text-gray-500">Rusak Berat</label>
-                            <input type="number" name="kondisi_rusak_berat" id="kondisi_rusak_berat" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" value="{{ old('kondisi_rusak_berat', $inventaris->kondisi_rusak_berat) }}" min="0">
-                        </div>
+                <!-- Kondisi Barang -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="kondisi_baik" class="block text-sm font-medium text-gray-700 mb-2">Kondisi Baik</label>
+                        <input 
+                            type="number" 
+                            name="kondisi_baik" 
+                            id="kondisi_baik" 
+                            class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200" 
+                            value="{{ old('kondisi_baik', $inventaris->kondisi_baik) }}" 
+                            min="0"
+                        >
+                    </div>
+                    <div>
+                        <label for="kondisi_rusak_ringan" class="block text-sm font-medium text-gray-700 mb-2">Rusak Ringan</label>
+                        <input 
+                            type="number" 
+                            name="kondisi_rusak_ringan" 
+                            id="kondisi_rusak_ringan" 
+                            class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200" 
+                            value="{{ old('kondisi_rusak_ringan', $inventaris->kondisi_rusak_ringan) }}" 
+                            min="0"
+                        >
+                    </div>
+                    <div>
+                        <label for="kondisi_rusak_berat" class="block text-sm font-medium text-gray-700 mb-2">Rusak Berat</label>
+                        <input 
+                            type="number" 
+                            name="kondisi_rusak_berat" 
+                            id="kondisi_rusak_berat" 
+                            class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200" 
+                            value="{{ old('kondisi_rusak_berat', $inventaris->kondisi_rusak_berat) }}" 
+                            min="0"
+                        >
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="keterangan" class="block text-gray-700 text-sm font-bold mb-2">Keterangan (Opsional):</label>
-                    <textarea name="keterangan" id="keterangan" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">{{ old('keterangan', $inventaris->keterangan) }}</textarea>
+                <!-- Keterangan -->
+                <div class="md:col-span-2">
+                    <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-2">Keterangan</label>
+                    <textarea 
+                        name="keterangan" 
+                        id="keterangan" 
+                        rows="3" 
+                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-200"
+                    >{{ old('keterangan', $inventaris->keterangan) }}</textarea>
                 </div>
+            </div>
 
-                <div class="mb-4">
-                    <label for="lokasi" class="block text-gray-700 text-sm font-bold mb-2">Lokasi (Opsional):</label>
-                    <input type="text" name="lokasi" id="lokasi" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('lokasi') border-red-500 @enderror" value="{{ old('lokasi', $inventaris->lokasi) }}">
-                    @error('lokasi')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="unit_id" class="block text-gray-700 text-sm font-bold mb-2">Unit:</label>
-                    <select name="unit_id" id="unit_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('unit_id') border-red-500 @enderror" required>
-                        <option value="">Pilih Unit</option>
-                        @foreach($units as $unit)
-                            <option value="{{ $unit->id }}" {{ old('unit_id', $inventaris->unit_id) == $unit->id ? 'selected' : '' }}>{{ $unit->nama_unit }}</option>
-                        @endforeach
-                    </select>
-                    @error('unit_id')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label for="room_id" class="block text-gray-700 text-sm font-bold mb-2">Ruangan:</label>
-                    <select name="room_id" id="room_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('room_id') border-red-500 @enderror" required>
-                        <option value="">Pilih Ruangan</option>
-                        @foreach($rooms as $room)
-                            <option value="{{ $room->id }}" {{ old('room_id', $inventaris->room_id) == $room->id ? 'selected' : '' }}>{{ $room->nama_ruangan }}</option>
-                        @endforeach
-                    </select>
-                    @error('room_id')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Perbarui Inventaris
-                    </button>
-                    <a href="{{ route('inventaris.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                        Batal
-                    </a>
-                </div>
-            </form>
-        </div>
+            <!-- Action Buttons -->
+            <div class="mt-8 flex flex-col-reverse md:flex-row gap-3 md:justify-end">
+                <a href="{{ route('inventaris.index') }}" class="inline-flex justify-center rounded-lg bg-gray-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 transition-colors duration-200">
+                    Batal
+                </a>
+                <button type="submit" class="inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Update Inventaris
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 @endsection

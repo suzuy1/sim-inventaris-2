@@ -13,9 +13,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', User::class); // Proteksi
-        $users = User::paginate(10); // Ganti .all()
-        return view('users.index', compact('users'));
+        $this->authorize("viewAny", User::class); // Proteksi
+        $users = User::latest()->paginate(10);
+    
+        $adminCount = User::where("role", "admin")->count();
+        $activeUsers = User::count(); // Assuming all users are active if no 'is_active' column
+        $newUsersThisMonth = User::whereMonth("created_at", now()->month)->count();
+        
+        return view("users.index", compact(
+            "users", 
+            "adminCount", 
+            "activeUsers", 
+            "newUsersThisMonth"
+        ));
     }
 
     /**

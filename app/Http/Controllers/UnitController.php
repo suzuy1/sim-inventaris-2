@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Unit;
+use App\Models\Room;
+use App\Models\Inventaris;
 use Illuminate\Http\Request;
 
 class UnitController extends Controller
@@ -12,9 +14,12 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Unit::class); // Proteksi
-        $units = Unit::paginate(10); // Ganti .all()
-        return view('units.index', compact('units'));
+        $this->authorize("viewAny", Unit::class); // Proteksi
+        $units = Unit::withCount(["rooms", "inventaris"])->paginate(10);
+        $totalRooms = Room::count();
+        $totalInventory = Inventaris::count();
+        
+        return view("units.index", compact("units", "totalRooms", "totalInventory"));
     }
 
     /**
